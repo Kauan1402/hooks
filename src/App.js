@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+function App(){
+  const [tarefas, setTarefas] = useState([]);
+
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    const tarefasStorage = localStorage.getItem('tarefas');
+
+    if (tarefasStorage) {
+      setTarefas(JSON.parse(tarefasStorage));
+    }
+  },[]);
+
+  useEffect(() => {
+    localStorage.setItem('tarefas', JSON.stringify(tarefas))
+  },[tarefas]);
+
+  function adicionarTarefa(){
+    setTarefas([...tarefas, input]);
+    setInput(""); //limpar o campo para adicionar outra tarefa
+  }
+
+  return(
+    <div>
+      <ul>
+        {tarefas.map (tarefa => (  //.map percorre a lista
+          <li key={tarefa}>{tarefa}</li> // mostra todas as tarefas cadastradas
+        ))}
+      </ul>
+
+      <input type='text' value={input} onChange={e => setInput(e.target.value)}/>
+
+      <button type="button" onClick={adicionarTarefa}>Adicionar</button>
     </div>
   );
+
 }
 
 export default App;
